@@ -1,0 +1,68 @@
+let mapleader = ","
+
+sethandler <C-P> a:vim
+map <C-P> <Action>(GotoFile)
+
+sethandler <C-G> a:vim
+map <C-G> <Action>(FindInPath)
+
+sethandler <C-E> a:ide
+map <C-E> <Action>(RecentFiles)
+
+sethandler <C-F> a:vim
+map <C-F> <Action>(FileStructurePopup)
+
+sethandler <C-O> a:vim
+map <C-O> :action Back<cr>
+
+sethandler <C-I> a:vim
+map <C-I> :action Forward<cr>
+
+sethandler <C-K> a:vim
+imap <C-K> :action EditorCloneCaretAbove<cr>
+
+sethandler <C-J> a:vim
+imap <C-J> :action EditorCloneCaretBelow<cr>
+
+map Y y$
+
+vnoremap p pgvy
+
+nmap gr :action ShowUsages<CR>
+nmap gi :action GotoImplementation<CR>
+nmap gs :action GotoSuperMethod<CR>
+nmap gb :action Back<cr>
+nmap gf :action Forward<cr>
+
+nno <silent> <ESC><ESC> <ESC>:nohlsearch<CR><ESC>
+
+nno <C-h> <C-w>h
+nno <C-j> <C-w>j
+nno <C-k> <C-w>k
+nno <C-l> <C-w>l
+nno <C-w>q <C-w>c
+nno == :action ReformatCode<cr>
+
+nno gv gvh
+
+nno U :redo<CR>
+vno > >gv
+vno < <gv
+
+set surround
+set commentary
+set idearefactormode=keep
+set ideajoin
+set clipboard=unnamedplus,unnamed,ideaput
+set scrolloff=5 sidescrolloff=10
+set gdefault
+set relativenumber
+set number
+set hlsearch
+set ignorecase
+set smartcase
+set incsearch
+set wrapscan
+set scrolloff=7
+set sidecrolloff=7
+set timeoutlen=200

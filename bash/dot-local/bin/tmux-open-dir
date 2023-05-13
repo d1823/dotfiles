@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]; then
+    echo "Usage: $0 <path>"
+    echo
+    echo "Allows you to choose one of the directories under the provided path through FZF, and creates a new tmux window with that path."
+    return
+fi
+
+FILES="$(find "$1" -mindepth 1 -maxdepth 1 -type d)"
+SELECTED="$(echo "$FILES" | fzf --reverse)"
+
+if [[ -z "$SELECTED" ]]; then
+    exit 1
+fi
+
+SELECTED_NAME="$(basename "$SELECTED" | tr . _)"
+TMUX_RUNNING="$(pgrep tmux)"
+
+if [[ -z "$TMUX" ]] && [[ -z "$TMUX_RUNNING" ]]; then
+    tmux new-session -s "$SELECTED_NAME" -c "$SELECTED"
+    exit 0
+fi
+
+if ! tmux has-session -t="$SELECTED_NAME" 2> /dev/null; then
+    tmux new-session -ds "$SELECTED_NAME" -c "$SELECTED"
+fi
+
+if [[ -n "$TMUX" ]]; then
+    tmux switch-client -t "$SELECTED_NAME"
+else
+    tmux attach -t "$SELECTED_NAME"
+fi
