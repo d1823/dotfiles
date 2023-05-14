@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+# These values may not be the right ones in your case!
+#
+# Run `sudo ddcutil vcpinfo | grep -E ": (Contrast|Brightness)"` to get the VCP
+# codes corresponding to brightness and contrast capabilities on your display.
+BRIGHTNESS_VCP=10
+CONTRAST_VCP=12
+
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run with elevated privileges."
+  exit 1
+fi
+
+PACKAGE=$(basename "$0")
+
+function print_help() {
+  echo "Usage: ./$PACKAGE <command>"
+  echo "A small utility allowing to control any configured, MCCS supporting display."
+  echo
+  echo "Commands:"
+  echo "  preset <type>     Can be darker, dark, dimmer, dim, default, light or lighter."
+  echo "  set <value>       Value between 1 and 100."
+}
+
+PRESET_DARKER=40
+PRESET_DARK=45
+PRESET_DIMMER=50
+PRESET_DIM=57
+PRESET_DEFAULT=65
+PRESET_LIGHT=75
+PRESET_LIGHTER=80
+
+CHOSEN_PRESET=
+
+while test $# -gt 0; do
+  case "$1" in
+    set)
+      shift
+      CHOSEN_PRESET="$1"
+      ;;
+    preset)
+      shift
+      case "$1" in
+        darker)
+          CHOSEN_PRESET="$PRESET_DARKER"
+          shift
+          ;;
+        dark)
+          CHOSEN_PRESET="$PRESET_DARK"
+          shift
+          ;;
+        dimmer)
+          CHOSEN_PRESET="$PRESET_DIMMER"
+          shift
+          ;;
+        dim)
+          CHOSEN_PRESET="$PRESET_DIM"
+          shift
+          ;;
+        default)
+          CHOSEN_PRESET="$PRESET_DEFAULT"
+          shift
+          ;;
+        light)
+          CHOSEN_PRESET="$PRESET_LIGHT"
+          shift
+          ;;
+        lighter)
+          CHOSEN_PRESET="$PRESET_LIGHTER"
+          shift
+          ;;
+        *)
+          break
+          ;;
+      esac
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if [ -z "$CHOSEN_PRESET" ] || [[ "$CHOSEN_PRESET" -lt 1 || "$CHOSEN_PRESET" -gt 100 ]]; then
+  print_help
+  exit 1
+fi
+
+/usr/bin/ddcutil setvcp "$BRIGHTNESS_VCP" "$CHOSEN_PRESET"
+/usr/bin/ddcutil setvcp "$CONTRAST_VCP" "$CHOSEN_PRESET"
