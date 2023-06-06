@@ -1,0 +1,29 @@
+function open-dir() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: ${FUNCNAME[0]} <path>"
+        echo
+        echo "Allows you to choose one of the directories under the provided path through FZF, and changes the current directory into it."
+        return 1
+    fi
+
+    FILES="$(find "$1" -mindepth 1 -maxdepth 1 -type d)"
+    SELECTED="$(echo "$FILES" | pick 'Change Directory')"
+
+    if [[ -z "$SELECTED" ]]; then
+        return 1
+    fi
+
+    cd "$SELECTED"
+}
+
+function open-ssh() {
+    HOSTS="$(grep -RPh '^Host ([^*]+)$' $HOME/.ssh/ | sed 's/Host //' | sort | uniq)"
+    SELECTED="$(echo "$HOSTS" | pick 'SSH into Host')"
+
+    if [[ -z "$SELECTED" ]]; then
+        return 1
+    fi
+
+    ssh "$SELECTED"
+}
+

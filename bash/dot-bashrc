@@ -54,7 +54,12 @@ if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
 
-bind -x '"\C-p": "tmux-open-dir ~/Code"'
+if [ -f ~/.bashrc.functions ]; then
+    . ~/.bashrc.functions
+fi
+
+bind '"\C-p": "open-dir ~/Code\n"'
+bind '"\C-o": "open-ssh\n"'
 
 # disable the flow control using ctrl-s and ctrl-q
 stty stop ''
