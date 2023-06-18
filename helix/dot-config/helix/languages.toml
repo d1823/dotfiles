@@ -1,0 +1,3 @@
+[[language]]
+name = "cpp"
+language-server = { command = "clangd", args=["--query-driver=/home/dawid/Code/serenity--serenityos/Toolchain/Local/**/*", "--header-insertion=never"] }

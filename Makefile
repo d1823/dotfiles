@@ -6,3 +6,4 @@ default:
 	stow -t ~ --dotfiles tmux
 	stow -t ~ --dotfiles nvim
 	stow -t ~ --dotfiles ideavim
+	stow -t ~ --dotfiles helix
