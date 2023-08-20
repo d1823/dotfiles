@@ -88,4 +88,4 @@ font:
   glyph_offset:
     y: 5
 
-colors: *light_theme
+colors: *dark_theme
