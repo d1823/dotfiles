@@ -9,14 +9,16 @@ window:
   dynamic_padding: true
 
 font:
+  size: 13
+
   normal:
-    family: JetBrains Mono
+    family: Fantasque Sans Mono
 
   offset:
-    y: 8
+    y: 10
 
   glyph_offset:
-    y: 4
+    y: 5
 
 # GitHub Dark
 # https://github.com/projekt0n/github-theme-contrib/blob/main/alacritty/github_dark.yml
