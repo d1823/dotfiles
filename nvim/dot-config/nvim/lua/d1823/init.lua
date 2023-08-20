@@ -24,6 +24,9 @@ vim.o.statusline = " %<%f %h%m%r%=%-14.(%l,%c%V%) %P "
 
 vim.keymap.set('n', '<ESC><ESC>', ':nohl<ENTER>')
 
+vim.keymap.set('n', '<C-p>', ':Files<CR>')
+vim.keymap.set('n', '<C-e>', ':Buffers<CR>')
+
 vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'k', 'gk')
 
