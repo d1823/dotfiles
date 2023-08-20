@@ -1,28 +1,40 @@
-env:
-  TERM: xterm-256color
+# GitHub Light
+# https://github.com/projekt0n/github-theme-contrib/blob/main/alacritty/github_light.yml
+light_theme: &light_theme
+  # Default colors
+  primary:
+    background: '0xffffff'
+    foreground: '0x24292f'
 
-window:
-  padding:
-    x: 10
-    y: 10
-
-  dynamic_padding: true
-
-font:
-  size: 13
-
+  # Normal colors
   normal:
-    family: Fantasque Sans Mono
+    black:   '0x24292e'
+    red:     '0xd73a49'
+    green:   '0x28a745'
+    yellow:  '0xdbab09'
+    blue:    '0x0366d6'
+    magenta: '0x5a32a3'
+    cyan:    '0x0598bc'
+    white:   '0x6a737d'
 
-  offset:
-    y: 10
+  # Bright colors
+  bright:
+    black:   '0x959da5'
+    red:     '0xcb2431'
+    green:   '0x22863a'
+    yellow:  '0xb08800'
+    blue:    '0x005cc5'
+    magenta: '0x5a32a3'
+    cyan:    '0x3192aa'
+    white:   '0xd1d5da'
 
-  glyph_offset:
-    y: 5
+  indexed_colors:
+    - { index: 16, color: '0xd18616' }
+    - { index: 17, color: '0xcb2431' }
 
 # GitHub Dark
 # https://github.com/projekt0n/github-theme-contrib/blob/main/alacritty/github_dark.yml
-colors:
+dark_theme: &dark_theme
   # Default colors
   primary:
     background: '0x24292e'
@@ -53,3 +65,27 @@ colors:
   indexed_colors:
     - { index: 16, color: '0xd18616' }
     - { index: 17, color: '0xf97583' }
+
+env:
+  TERM: xterm-256color
+
+window:
+  padding:
+    x: 10
+    y: 10
+
+  dynamic_padding: true
+
+font:
+  size: 13
+
+  normal:
+    family: Fantasque Sans Mono
+
+  offset:
+    y: 10
+
+  glyph_offset:
+    y: 5
+
+colors: *light_theme
