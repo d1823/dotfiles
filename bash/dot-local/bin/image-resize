@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+file="$1"
+
+for size in ${@:2}
+do
+    convert "$file" -resize $size icon-$size.png
+done
