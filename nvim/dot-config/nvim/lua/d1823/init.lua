@@ -1,5 +1,4 @@
 require("d1823.packer")
-require("d1823.background_sync"):run()
 
 -- I don't mind the default status bar aside from the lack of padding.
 -- Let's use this default status bar approximation with some spaces on each side.
@@ -36,7 +35,7 @@ vim.opt.clipboard = "unnamedplus"
 
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "go", "php", "javascript", "typescript", "json", "yaml", "lua", "vim", "vimdoc", "ini" },
-  auto_install = false,
+  auto_install = true,
   highlight = {
     enable = true,
 
@@ -51,3 +50,5 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
+require("d1823.background_sync").run()

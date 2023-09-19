@@ -20,7 +20,7 @@ function M.run()
         -- Although the background type is not useful for these themes, we can still
         -- use it to determine which one should be loaded.
         if vim.o.background == "dark" then
-            vim.cmd [[silent! colorscheme github_dark]]
+            vim.cmd [[silent! colorscheme github_dark_dimmed]]
         else
             vim.cmd [[silent! colorscheme github_light]]
         end
