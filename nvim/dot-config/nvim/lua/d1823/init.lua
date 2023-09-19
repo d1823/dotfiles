@@ -1,22 +1,5 @@
 require("d1823.packer")
-
--- Use the GNOME specific org.freedesktop.appearance color-scheme setting to
--- figure out the vim background through the system-wide color-scheme
--- preference.
-local bg = vim.fn.system({
-    "bash",
-    "-c",
-    "gsettings get org.gnome.desktop.interface color-scheme | grep -i prefer-dark > /dev/null && echo dark || echo light"
-})
-vim.o.background = bg:gsub("%s+", "")
-
--- Although the background type is not useful for these themes, we can still
--- use it to determine which one should be loaded.
-if vim.o.background == "dark" then
-    vim.cmd [[silent! colorscheme github_dark]]
-else
-    vim.cmd [[silent! colorscheme github_light]]
-end
+require("d1823.background_sync"):run()
 
 -- I don't mind the default status bar aside from the lack of padding.
 -- Let's use this default status bar approximation with some spaces on each side.
