@@ -13,8 +13,21 @@
 (menu-bar-mode -1)
 
 (setq inhibit-startup-message t)
-      
-(load-theme 'github-light t)
+
+(defun gnome-dark-mode-enabled-p ()
+  "Check if frame is dark or not."
+  (if (executable-find "gsettings")
+      (string-equal (string-trim (thread-last "gsettings get org.gnome.desktop.interface color-scheme" shell-command-to-string) "[ \t\n\r']+" "[ \t\n\r']+") "prefer-dark")))
+
+(defun load-auto-detected-theme ()
+  (if (gnome-dark-mode-enabled-p)
+				 (load-theme 'solarized-dark t)
+			       (load-theme 'solarized-light t)))
+
+(use-package solarized-theme
+  :ensure t
+  :config
+  (run-with-timer 0 3 'load-auto-detected-theme))
 
 (use-package magit
   :ensure t
@@ -34,8 +47,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("a596677067a637e7ec53ac1fab875a5ade7c1ac0b30ff9eee27fd8c2e9902045" default))
- '(package-selected-packages '(ivy magit)))
+   '("7f7052c1376b58baaaca41b680b068716eeacb8aaadbe58e1f87d7b5f0cdb64b" "a596677067a637e7ec53ac1fab875a5ade7c1ac0b30ff9eee27fd8c2e9902045" default))
+ '(package-selected-packages '(solarized-theme ivy magit)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
