@@ -14,20 +14,48 @@
 
 (setq inhibit-startup-message t)
 
-(defun gnome-dark-mode-enabled-p ()
-  "Check if frame is dark or not."
-  (if (executable-find "gsettings")
-      (string-equal (string-trim (thread-last "gsettings get org.gnome.desktop.interface color-scheme" shell-command-to-string) "[ \t\n\r']+" "[ \t\n\r']+") "prefer-dark")))
-
-(defun load-auto-detected-theme ()
-  (if (gnome-dark-mode-enabled-p)
-				 (load-theme 'solarized-dark t)
-			       (load-theme 'solarized-light t)))
-
 (use-package solarized-theme
   :ensure t
+  :demand t
+  :init
+  (require 'dbus)
+  (require 'cl-lib)
+
+  (defun get-color-scheme-preference-from-dbus ()
+    (let ((service "org.freedesktop.portal.Desktop")
+	  (path "/org/freedesktop/portal/desktop")
+	  (interface "org.freedesktop.portal.Settings")
+	  (method "Read")
+	  (arg-1 "org.freedesktop.appearance")
+	  (arg-2 "color-scheme"))
+      (car (car (dbus-call-method :session service path interface method arg-1 arg-2)))))
+
+  (defun color-scheme-preference-to-theme (color-scheme-preference)
+    (cl-case color-scheme-preference
+      (1 'solarized-dark)
+      (2 'solarized-light)
+      (0 'solarized-dark)
+      (t (error "Unknown color scheme preference: %s" color-scheme-preference))))
+
+  (defun appearance-color-scheme-change-handler (path setting value)
+    (when (and (string-equal "org.freedesktop.appearance" path) (string-equal "color-scheme" setting))
+      (load-theme (color-scheme-preference-to-theme (car value)) t nil)))
+
+  (let ((bus "org.freedesktop.impl.portal")
+	(path "/org/freedesktop/portal/desktop")
+	(interface "org.freedesktop.impl.portal.Settings")
+	(dbus-signal "SettingChanged"))
+    (dbus-register-signal :session
+			  bus
+			  path
+			  interface
+			  dbus-signal
+			  #'appearance-color-scheme-change-handler))
+
+  (message "D-Bus signal handler registered. Waiting for signals...")
+
   :config
-  (run-with-timer 0 3 'load-auto-detected-theme))
+  (load-theme (color-scheme-preference-to-theme (get-color-scheme-preference-from-dbus)) t nil))
 
 (use-package magit
   :ensure t
