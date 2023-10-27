@@ -1,76 +1,5 @@
-# GitHub Light
-# https://github.com/projekt0n/github-theme-contrib/blob/main/themes/alacritty/github_light.yml
-light_theme: &light_theme
-  # Default colors
-  primary:
-    background: '0xffffff'
-    foreground: '0x1F2328'
-
-  # Cursor colors
-  #
-  # These will only be used when the `custom_cursor_colors` field is set to `true`.
-  cursor:
-    text: '0xffffff'
-    cursor: '0x1f2328'
-
-  # Normal colors
-  normal:
-    black: '0x24292f'
-    red: '0xcf222e'
-    green: '0x116329'
-    yellow: '0x4d2d00'
-    blue: '0x0969da'
-    magenta: '0x8250df'
-    cyan: '0x1b7c83'
-    white: '0x6e7781'
-
-  # Bright colors
-  bright:
-    black: '0x57606a'
-    red: '0xa40e26'
-    green: '0x1a7f37'
-    yellow: '0x633c01'
-    blue: '0x218bff'
-    magenta: '0x8250df'
-    cyan: '0x1b7c83'
-    white: '0x6e7781'
-
-# GitHub Dark
-# https://github.com/projekt0n/github-theme-contrib/blob/main/themes/alacritty/github_dark_dimmed.yml
-dark_theme: &dark_theme
-  # Default colors
-  primary:
-    background: '0x22272e'
-    foreground: '0xadbac7'
-
-  # Cursor colors
-  #
-  # These will only be used when the `custom_cursor_colors` field is set to `true`.
-  cursor:
-    text: '0x22272e'
-    cursor: '0xadbac7'
-
-  # Normal colors
-  normal:
-    black: '0x545d68'
-    red: '0xf47067'
-    green: '0x57ab5a'
-    yellow: '0xc69026'
-    blue: '0x539bf5'
-    magenta: '0xb083f0'
-    cyan: '0x39c5cf'
-    white: '0x909dab'
-
-  # Bright colors
-  bright:
-    black: '0x636e7b'
-    red: '0xff938a'
-    green: '0x6bc46d'
-    yellow: '0xdaaa3f'
-    blue: '0x6cb6ff'
-    magenta: '0xb083f0'
-    cyan: '0x39c5cf'
-    white: '0x909dab'
+import:
+ - ~/.config/alacritty/themes/current-theme.yml
 
 env:
   TERM: xterm-256color
@@ -93,5 +22,3 @@ font:
 
   glyph_offset:
     y: 5
-
-colors: *dark_theme
