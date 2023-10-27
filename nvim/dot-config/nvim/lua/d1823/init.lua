@@ -33,6 +33,8 @@ vim.opt.updatetime = 50
 
 vim.opt.clipboard = "unnamedplus"
 
+vim.opt.termguicolors = true
+
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "go", "php", "javascript", "typescript", "json", "yaml", "lua", "vim", "vimdoc", "ini" },
   auto_install = true,
