@@ -8,3 +8,4 @@ default:
 	stow -t ~ --dotfiles emacs
 	stow -t ~ --dotfiles ideavim
 	stow -t ~ --dotfiles helix
+	stow -t ~ --dotfiles themer

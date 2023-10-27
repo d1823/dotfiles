@@ -1,0 +1,19 @@
+{
+    "adapters": [
+        {
+            "adapter": "symlink",
+            "no_preference_file": "/home/dawid/.config/alacritty/themes/dark-theme.yml",
+            "dark_preference_file": "/home/dawid/.config/alacritty/themes/dark-theme.yml",
+            "light_preference_file": "/home/dawid/.config/alacritty/themes/light-theme.yml",
+            "target_file": "/home/dawid/.config/alacritty/themes/current-theme.yml"
+        },
+        {
+            "adapter": "tmux",
+            "no_preference_file": "/home/dawid/.config/tmux/themes/dark-theme.conf",
+            "dark_preference_file": "/home/dawid/.config/tmux/themes/dark-theme.conf",
+            "light_preference_file": "/home/dawid/.config/tmux/themes/light-theme.conf",
+            "target_file": "/home/dawid/.config/tmux/themes/current-theme.conf",
+            "tmux_config_file": "/home/dawid/.config/tmux/tmux.conf"
+        }
+    ]
+}
