@@ -1,8 +1,0 @@
-[Unit]
-Description=Sync Alacritty's theme every 3s
-[Timer]
-OnBootSec=3
-OnUnitActiveSec=3
-AccuracySec=1ms
-[Install]
-WantedBy=timers.target
