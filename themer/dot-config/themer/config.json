@@ -1,11 +1,12 @@
 {
     "adapters": [
         {
-            "adapter": "symlink",
+            "adapter": "alacritty",
             "no_preference_file": "/home/dawid/.config/alacritty/themes/dark-theme.yml",
             "dark_preference_file": "/home/dawid/.config/alacritty/themes/dark-theme.yml",
             "light_preference_file": "/home/dawid/.config/alacritty/themes/light-theme.yml",
-            "target_file": "/home/dawid/.config/alacritty/themes/current-theme.yml"
+            "target_file": "/home/dawid/.config/alacritty/themes/current-theme.yml",
+            "alacritty_config_file": "/home/dawid/.config/alacritty/alacritty.yml"
         },
         {
             "adapter": "tmux",
