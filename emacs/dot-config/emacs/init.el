@@ -12,6 +12,7 @@
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 
+(setq column-number-mode t)
 (setq inhibit-startup-message t)
 
 (use-package solarized-theme
