@@ -21,7 +21,19 @@ shopt -s checkwinsize
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-PS1='\[\033[01;34m\]\w\[\033[00m\] \$ '
+parse_git_bg() {
+    if [[ $(git status -s 2> /dev/null) ]]; then
+        echo -e "\033[0;31m"
+    else
+        echo -e "\033[0;32m"
+    fi
+}
+
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(git:\1) /'
+}
+
+PS1="\[\033[01;34m\]\w\[\033[00m\] \[\e[\$(parse_git_bg)\]\$(parse_git_branch)\[\e[00m\]\$ "
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
