@@ -24,6 +24,18 @@
 	 ("M-v" . pixel-scroll-interpolate-up))
   :config
   (pixel-scroll-precision-mode))
+
+(use-package tree-sitter
+  :ensure t
+  :requires (php-mode)
+  :config
+  (global-tree-sitter-mode))
+
+(use-package tree-sitter-langs
+  :ensure t)
+
+(use-package php-mode
+  :ensure t)
 (use-package solarized-theme
   :ensure t
   :demand t
