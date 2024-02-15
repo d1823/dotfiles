@@ -36,6 +36,9 @@
 
 (use-package php-mode
   :ensure t)
+
+;; Ensure we're subscribing the FreeDesktop's color-scheme changes
+;; and switch the solarized theme accordingly.
 (use-package solarized-theme
   :ensure t
   :demand t
@@ -82,6 +85,9 @@
 (use-package magit
   :ensure t
   :config
+  ;; Ensure the magit's frame is displayed full screen.
+  ;; At some point this was the default behavior, but later on
+  ;; got replaced with a display-in-horizontal-split.
   (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
 
 (use-package ivy
