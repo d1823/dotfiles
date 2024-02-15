@@ -15,6 +15,15 @@
 (setq column-number-mode t)
 (setq inhibit-startup-message t)
 
+;; Let's enable pixel-precision scrolling for mouse & keyboard.
+(use-package pixel-scroll
+  :init
+  (setq pixel-scroll-precision-large-scroll-height 40.0)
+  (setq pixel-scroll-precision-interpolate-page 1)
+  :bind (("C-v" . pixel-scroll-interpolate-down)
+	 ("M-v" . pixel-scroll-interpolate-up))
+  :config
+  (pixel-scroll-precision-mode))
 (use-package solarized-theme
   :ensure t
   :demand t
