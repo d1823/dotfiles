@@ -6,6 +6,9 @@
              (file-name-as-directory
               (expand-file-name "~/.config/emacs/themes")))
 
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(load custom-file 'noerror)
+
 (set-frame-font "Cascadia Mono 12" nil t)
 
 (tool-bar-mode -1)
@@ -96,18 +99,3 @@
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   (ivy-mode))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("7f7052c1376b58baaaca41b680b068716eeacb8aaadbe58e1f87d7b5f0cdb64b" "a596677067a637e7ec53ac1fab875a5ade7c1ac0b30ff9eee27fd8c2e9902045" default))
- '(package-selected-packages '(solarized-theme ivy magit)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
