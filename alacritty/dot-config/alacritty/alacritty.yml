@@ -12,13 +12,26 @@ window:
   dynamic_padding: true
 
 font:
-  size: 11
+  size: 12
 
   normal:
-    family: Cascadia Mono
+    family: Iosevka1823
+    style: Medium Semi-Condensed
+
+  bold:
+    family: Iosevka1823
+    style: Bold Semi-Condensed
+
+  italic:
+    family: Iosevka1823
+    style: Italic Semi-Condensed
+
+  bold_italic:
+    family: Iosevka1823
+    style: Bold Italic Semi-Condensed
 
   offset:
-    y: 10
+    y: 12
 
   glyph_offset:
-    y: 5
+    y: 6
