@@ -21,6 +21,7 @@ function print_help() {
   echo "Commands:"
   echo "  preset <type>     Can be darker, dark, dimmer, dim, default, light or lighter."
   echo "  set <value>       Value between 1 and 100."
+  echo "  get <value>       Get the current value between 1 and 100."
 }
 
 PRESET_DARKER=40
@@ -35,6 +36,12 @@ CHOSEN_PRESET=
 
 while test $# -gt 0; do
   case "$1" in
+    get)
+      shift
+      /usr/bin/ddcutil getvcp "$BRIGHTNESS_VCP"
+      /usr/bin/ddcutil getvcp "$CONTRAST_VCP"
+      exit 0
+      ;;
     set)
       shift
       CHOSEN_PRESET="$1"
