@@ -33,7 +33,7 @@ parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(git:\1) /'
 }
 
-PS1="\[\033[01;34m\]\w\[\033[00m\] \[\e[\$(parse_git_bg)\]\$(parse_git_branch)\[\e[00m\]\$ "
+PS1="\[\033[33m\]\D{%H:%M} \[\033[01;34m\]\w\[\033[00m\] \[\e[\$(parse_git_bg)\]\$(parse_git_branch)\[\e[00m\]\$ "
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
