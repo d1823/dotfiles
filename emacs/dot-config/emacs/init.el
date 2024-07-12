@@ -87,6 +87,22 @@
 
 (use-package magit
   :ensure t
+  :init
+  (defun custom/list-directory-names (path)
+    "List all directory names at the given PATH."
+    (mapcar #'file-name-nondirectory
+            (cl-remove-if-not 'file-directory-p (directory-files path t "^[^.]+"))))
+
+  (defun custom/magit-interactive-status ()
+    "Prompt to pick a repository at the '~/Code' path and call `magit-status` with prefix arg."
+    (interactive)
+    (let* ((code-dir (expand-file-name "~/Code"))
+           (repo-names (custom/list-directory-names code-dir))
+           (selected-repo (ivy-read "Select repository: " repo-names))
+           (repo-path (expand-file-name selected-repo code-dir)))
+      (let ((current-prefix-arg t))
+	(magit-status repo-path))))
+  (defalias 'git 'custom/magit-interactive-status)
   :config
   ;; Ensure the magit's frame is displayed full screen.
   ;; At some point this was the default behavior, but later on
