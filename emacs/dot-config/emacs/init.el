@@ -49,7 +49,7 @@
   (require 'dbus)
   (require 'cl-lib)
 
-  (defun get-color-scheme-preference-from-dbus ()
+  (defun custom/get-color-scheme-preference-from-dbus ()
     (let ((service "org.freedesktop.portal.Desktop")
 	  (path "/org/freedesktop/portal/desktop")
 	  (interface "org.freedesktop.portal.Settings")
@@ -58,16 +58,16 @@
 	  (arg-2 "color-scheme"))
       (car (car (dbus-call-method :session service path interface method arg-1 arg-2)))))
 
-  (defun color-scheme-preference-to-theme (color-scheme-preference)
+  (defun custom/color-scheme-preference-to-theme (color-scheme-preference)
     (cl-case color-scheme-preference
       (1 'solarized-dark)
       (2 'solarized-light)
       (0 'solarized-dark)
       (t (error "Unknown color scheme preference: %s" color-scheme-preference))))
 
-  (defun appearance-color-scheme-change-handler (path setting value)
+  (defun custom/appearance-color-scheme-change-handler (path setting value)
     (when (and (string-equal "org.freedesktop.appearance" path) (string-equal "color-scheme" setting))
-      (load-theme (color-scheme-preference-to-theme (car value)) t nil)))
+      (load-theme (custom/color-scheme-preference-to-theme (car value)) t nil)))
 
   (let ((bus "org.freedesktop.impl.portal")
 	(path "/org/freedesktop/portal/desktop")
@@ -78,12 +78,12 @@
 			  path
 			  interface
 			  dbus-signal
-			  #'appearance-color-scheme-change-handler))
+			  #'custom/appearance-color-scheme-change-handler))
 
   (message "D-Bus signal handler registered. Waiting for signals...")
 
   :config
-  (load-theme (color-scheme-preference-to-theme (get-color-scheme-preference-from-dbus)) t nil))
+  (load-theme (custom/color-scheme-preference-to-theme (custom/get-color-scheme-preference-from-dbus)) t nil))
 
 (use-package magit
   :ensure t
