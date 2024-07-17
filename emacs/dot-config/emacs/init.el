@@ -107,7 +107,8 @@
   ;; Ensure the magit's frame is displayed full screen.
   ;; At some point this was the default behavior, but later on
   ;; got replaced with a display-in-horizontal-split.
-  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  :bind ("C-S-g" . 'custom/magit-interactive-status))
 
 (use-package ivy
   :ensure t
