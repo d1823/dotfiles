@@ -11,12 +11,10 @@
   commentchar = "*"
 
 # The .gitconfig.projects file contains a set of gitdir based conditional
-# includes to namespace-specific git configurations.#
+# includes to namespace-specific git configurations.
 #
 # The `gitdir` keyword with a wildcarded path is used to enable a particular
 # configuration for a set of directories in a single-level directory structure.
-# Coupling that with URL rewrites makes it possible to have namespace-specific
-# git & ssh configuration.
 #
 # Example:
 #   ~/.gitconfig.projects:
@@ -26,8 +24,11 @@
 #   ~/.gitconfig.acme:
 #     [user]
 #       email = developer@acme.com
-#   
-#     [url "git@acme-github"]
-#       insteadOf = git@github.com
 [include]
   path = ~/.gitconfig.projects
+
+# The file defining all url mappings.
+# Previously, these were defined in the respective project gitconfigs, but were migrated
+# when it was discovered that Go dependency resolution has issues finding them.
+[include]
+  path = ~/.gitconfig.urls
