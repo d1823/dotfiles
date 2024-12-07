@@ -17,7 +17,7 @@ function M.run()
             table.concat({
                 "dbus-send --session --dest=org.freedesktop.portal.Desktop --print-reply /org/freedesktop/portal/desktop org.freedesktop.portal.Settings.Read string:'org.freedesktop.appearance' string:'color-scheme'",
                 "tail -n 1",
-                "awk '{print ($4 == 2) ? \"light\" : \"dark\"}'"
+                "awk '{print ($4 == 0) ? \"light\" : \"dark\"}'"
             }, "|")
         })
         vim.o.background = bg:gsub("%s+", "")

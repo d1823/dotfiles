@@ -62,7 +62,7 @@
     (cl-case color-scheme-preference
       (1 'solarized-dark)
       (2 'solarized-light)
-      (0 'solarized-dark)
+      (0 'solarized-light)
       (t (error "Unknown color scheme preference: %s" color-scheme-preference))))
 
   (defun custom/appearance-color-scheme-change-handler (path setting value)
