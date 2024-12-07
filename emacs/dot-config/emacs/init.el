@@ -9,7 +9,7 @@
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file 'noerror)
 
-(set-frame-font "Cascadia Mono 12" nil t)
+(set-frame-font "MapleMono 12" nil t)
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
