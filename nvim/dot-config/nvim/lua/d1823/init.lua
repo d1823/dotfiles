@@ -53,6 +53,10 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
-require'lspconfig'.intelephense.setup{}
+require'lspconfig'.intelephense.setup{
+    init_options = {
+        licenceKey = os.getenv("HOME") .. "/.config/intelephense/license.txt"
+    }
+}
 
 require("d1823.background_sync").run()
