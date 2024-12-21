@@ -53,4 +53,6 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+require'lspconfig'.intelephense.setup{}
+
 require("d1823.background_sync").run()
