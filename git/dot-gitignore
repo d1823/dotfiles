@@ -2,3 +2,4 @@
 .DS_Store
 *.swp
 .phpunit.result.cache
+.phpunit.cache/
