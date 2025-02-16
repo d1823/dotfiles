@@ -28,11 +28,14 @@ map Y y$
 
 vnoremap p pgvy
 
-nmap gr :action ShowUsages<CR>
+nmap fa :action ShowIntentionActions<CR>
+nmap fr :action RefactoringMenu<CR>
 nmap gi :action GotoImplementation<CR>
-nmap gs :action GotoSuperMethod<CR>
-nmap gb :action Back<cr>
-nmap gf :action Forward<cr>
+nmap gd :action GotoDeclaration<CR>
+nmap gD :action GotoDeclaration<CR>
+nmap gs :action ParameterInfo<CR>
+nmap gr :action ShowUsages<CR>
+nmap gh :action ShowHoverInfo<CR>
 
 nno <silent> <ESC><ESC> <ESC>:nohlsearch<CR><ESC>
 
