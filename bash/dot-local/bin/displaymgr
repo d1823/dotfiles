@@ -94,4 +94,4 @@ if [ -z "$CHOSEN_PRESET" ] || [[ "$CHOSEN_PRESET" -lt 1 || "$CHOSEN_PRESET" -gt 
 fi
 
 /usr/bin/ddcutil setvcp "$BRIGHTNESS_VCP" "$CHOSEN_PRESET"
-/usr/bin/ddcutil setvcp "$CONTRAST_VCP" "$CHOSEN_PRESET"
+/usr/bin/ddcutil setvcp "$CONTRAST_VCP" "$(($CHOSEN_PRESET + 10))"
