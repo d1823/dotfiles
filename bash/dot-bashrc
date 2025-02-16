@@ -118,6 +118,7 @@ export -f get_fzf_default_opts
 
 bind '"\C-p": "open-dir ~/Code\n"'
 bind '"\C-o": "open-ssh\n"'
+bind '"\C-u": "open-container\n"'
 
 # disable the flow control using ctrl-s and ctrl-q
 stty stop ''

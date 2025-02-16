@@ -27,3 +27,14 @@ function open-ssh() {
     ssh "$SELECTED"
 }
 
+
+function open-container() {
+    HOSTS="$(docker ps --format '{{.Names}}' | sort | uniq)"
+    SELECTED="$(echo "$HOSTS" | pick 'SSH into Docker')"
+
+    if [[ -z "$SELECTED" ]]; then
+        return 1
+    fi
+
+    docker exec -it "$SELECTED" bash
+}
