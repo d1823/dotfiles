@@ -1,0 +1,127 @@
+if [[ ":$PATH:" != *":/Users/dawid/.local/bin:"* ]]; then
+    export PATH="$PATH:/Users/dawid/.local/bin"
+fi
+
+# Remove the forward slash so that it's possible to move between path components.
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+
+# Git color based on dirty/clean
+git_color() {
+  if [[ -n $(git status -s 2>/dev/null) ]]; then
+    echo "%F{red}"
+  else
+    echo "%F{green}"
+  fi
+}
+
+# Get current Git branch
+git_branch() {
+  local branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+  [[ -n "$branch" ]] && echo "(git:$branch) "
+}
+
+# Update prompt before each command
+precmd() {
+  GIT_COLOR=$(git_color)
+  GIT_BRANCH=$(git_branch)
+  PROMPT="%F{yellow}%D{%H:%M} %F{blue}%~ %f${GIT_COLOR}${GIT_BRANCH}%f$ "
+}
+
+function open-dir() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: ${FUNCNAME[0]} <path>"
+        echo
+        echo "Allows you to choose one of the directories under the provided path through FZF, and changes the current directory into it."
+        return 1
+    fi
+
+    FILES="$(find "$1" -mindepth 1 -maxdepth 1 -type d)"
+    SELECTED="$(echo "$FILES" | pick 'Change Directory')"
+
+    if [[ -z "$SELECTED" ]]; then
+        return 1
+    fi
+
+    cd "$SELECTED"
+
+    zle accept-line
+}
+
+function open-code-dir() {
+    open-dir ~/Code
+}
+
+zle -N open-code-dir
+
+function open-ssh() {
+    HOSTS="$(grep -REh '^Host ([^*]+)$' $HOME/.ssh/ | sed 's/Host //' | sort | uniq)"
+    SELECTED="$(echo "$HOSTS" | pick 'SSH into Host')"
+
+    if [[ -z "$SELECTED" ]]; then
+        return 1
+    fi
+
+    BUFFER="ssh "$SELECTED""
+    zle accept-line
+}
+
+zle -N open-ssh
+
+function open-container() {
+    emulate -L zsh
+
+    HOSTS="$(docker ps --format '{{.Names}}' | sort | uniq)"
+    SELECTED="$(echo "$HOSTS" | pick 'SSH into Docker')"
+
+    if [[ -z "$SELECTED" ]]; then
+        return 1
+    fi
+
+    BUFFER="docker exec -it "$SELECTED" bash"
+    zle accept-line
+}
+
+zle -N open-container
+
+get_fzf_default_opts() {
+  local base03="234"
+  local base02="235"
+  local base01="240"
+  local base00="241"
+  local base0="244"
+  local base1="245"
+  local base2="254"
+  local base3="230"
+  local yellow="136"
+  local orange="166"
+  local red="160"
+  local magenta="125"
+  local violet="61"
+  local blue="33"
+  local cyan="37"
+  local green="64"
+
+  local solarized_dark=
+  local solarized_light="
+    --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:-1,hl+:$blue
+    --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+  "
+
+  local color_scheme="$(
+    dbus-send --session --dest=org.freedesktop.portal.Desktop --print-reply /org/freedesktop/portal/desktop org.freedesktop.portal.Settings.Read string:'org.freedesktop.appearance' string:'color-scheme' |
+    tail -n 1 |
+    awk '{print $4}'
+  )"
+
+  if [ $color_scheme = 2 ]; then
+    echo $solarized_light
+  else
+    echo $solarized_dark
+  fi
+}
+
+export FZF_DEFAULT_OPTS="--color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:-1,hl+:$blue --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow"
+
+bindkey '^p' open-code-dir
+bindkey '^o' open-ssh
+bindkey '^u' open-container
