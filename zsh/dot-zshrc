@@ -1,6 +1,8 @@
 if [[ ":$PATH:" != *":/Users/dawid/.local/bin:"* ]]; then
     export PATH="$PATH:/Users/dawid/.local/bin"
 fi
+autoload -U select-word-style
+select-word-style bash
 
 # Remove the forward slash so that it's possible to move between path components.
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
