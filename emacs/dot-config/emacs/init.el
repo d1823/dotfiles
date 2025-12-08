@@ -108,6 +108,7 @@
   ;; At some point this was the default behavior, but later on
   ;; got replaced with a display-in-horizontal-split.
   (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  (setq magit-log-margin '(t "%F %R" magit-log-margin-width t 18))
   :bind ("C-S-g" . 'custom/magit-interactive-status))
 
 (use-package ivy
