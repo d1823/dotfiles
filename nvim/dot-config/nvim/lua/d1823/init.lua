@@ -5,6 +5,9 @@ vim.g.mapleader = " "
 
 require("d1823.run_configs")
 
+local float_term = require("d1823.floating_terminal")
+vim.keymap.set('n', '<leader>cc', function() float_term.toggle('claude') end, { desc = 'Toggle Claude Code' })
+
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
@@ -70,7 +73,7 @@ vim.opt.incsearch = true
 
 vim.opt.scrolloff = 8
 
-vim.opt.timeoutlen = 150
+vim.opt.timeoutlen = 200
 vim.opt.updatetime = 50
 
 vim.opt.termguicolors = true
