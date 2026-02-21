@@ -18,13 +18,17 @@ local function open_float(buf)
   return win
 end
 
-function M.run(cmd)
+local running = {}
+
+local function launch(cmd)
   local buf = vim.api.nvim_create_buf(false, true)
   local win = open_float(buf)
   vim.cmd('terminal ' .. cmd)
 
   local term_buf = vim.api.nvim_get_current_buf()
   local kill = true
+
+  running[cmd] = term_buf
 
   vim.keymap.set({'t', 'n', 'i'}, '<esc>', function()
     kill = false
@@ -40,6 +44,33 @@ function M.run(cmd)
       end
     end,
   })
+
+  vim.api.nvim_create_autocmd('BufDelete', {
+    buffer = term_buf,
+    once = true,
+    callback = function()
+      if running[cmd] == term_buf then
+        running[cmd] = nil
+      end
+    end,
+  })
+end
+
+function M.run(cmd)
+  local existing = running[cmd]
+  if existing and vim.api.nvim_buf_is_valid(existing) then
+    vim.ui.select({ 'New instance', 'Replace existing', 'Cancel' }, { prompt = 'Already running: ' .. cmd }, function(choice)
+      if choice == 'New instance' then
+        launch(cmd)
+      elseif choice == 'Replace existing' then
+        vim.api.nvim_buf_delete(existing, { force = true })
+        running[cmd] = nil
+        launch(cmd)
+      end
+    end)
+    return
+  end
+  launch(cmd)
 end
 
 local toggles = {}
