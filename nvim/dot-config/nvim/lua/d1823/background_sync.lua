@@ -65,7 +65,7 @@ function M.run()
         M.timer = nil
     end
 
-    M.timer = vim.loop.new_timer()
+    M.timer = vim.uv.new_timer()
     if not M.timer then
         vim.notify("Error: Failed to create Neovim timer for theme switching.", vim.log.levels.ERROR)
         return

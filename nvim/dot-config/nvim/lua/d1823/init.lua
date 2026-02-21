@@ -63,20 +63,14 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
-vim.opt.autoindent = true
 vim.opt.smartindent = true
 
 vim.opt.wrap = false
-
-vim.opt.hlsearch = true
-vim.opt.incsearch = true
 
 vim.opt.scrolloff = 8
 
 vim.opt.timeoutlen = 200
 vim.opt.updatetime = 50
-
-vim.opt.termguicolors = true
 vim.cmd [[silent colorscheme solarized8]]
 
 vim.o.completeopt = "menu,menuone,popup,fuzzy"
@@ -116,7 +110,7 @@ require'nvim-treesitter.configs'.setup {
 
     disable = function(lang, buf)
         local max_filesize = 100 * 1024 -- 100 KB
-        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
         if ok and stats and stats.size > max_filesize then
             return true
         end
