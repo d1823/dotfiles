@@ -1,0 +1,28 @@
+[submodule "nvim/dot-config/nvim/pack/plugins/start/vim-solarized8"]
+	path = nvim/dot-config/nvim/pack/plugins/start/vim-solarized8
+	url = https://github.com/lifepillar/vim-solarized8.git
+	branch = neovim
+[submodule "nvim/dot-config/nvim/pack/plugins/start/vim-eunuch"]
+	path = nvim/dot-config/nvim/pack/plugins/start/vim-eunuch
+	url = https://github.com/tpope/vim-eunuch.git
+[submodule "nvim/dot-config/nvim/pack/plugins/start/vim-sleuth"]
+	path = nvim/dot-config/nvim/pack/plugins/start/vim-sleuth
+	url = https://github.com/tpope/vim-sleuth.git
+[submodule "nvim/dot-config/nvim/pack/plugins/start/fzf-lua"]
+	path = nvim/dot-config/nvim/pack/plugins/start/fzf-lua
+	url = https://github.com/ibhagwan/fzf-lua.git
+[submodule "nvim/dot-config/nvim/pack/plugins/start/nvim-lspconfig"]
+	path = nvim/dot-config/nvim/pack/plugins/start/nvim-lspconfig
+	url = https://github.com/neovim/nvim-lspconfig.git
+[submodule "nvim/dot-config/nvim/pack/plugins/start/nvim-lint"]
+	path = nvim/dot-config/nvim/pack/plugins/start/nvim-lint
+	url = https://github.com/mfussenegger/nvim-lint.git
+[submodule "nvim/dot-config/nvim/pack/plugins/start/kulala.nvim"]
+	path = nvim/dot-config/nvim/pack/plugins/start/kulala.nvim
+	url = https://github.com/mistweaverco/kulala.nvim.git
+[submodule "nvim/dot-config/nvim/pack/plugins/start/nvim-tree.lua"]
+	path = nvim/dot-config/nvim/pack/plugins/start/nvim-tree.lua
+	url = https://github.com/nvim-tree/nvim-tree.lua.git
+[submodule "nvim/dot-config/nvim/pack/plugins/start/nvim-treesitter"]
+	path = nvim/dot-config/nvim/pack/plugins/start/nvim-treesitter
+	url = https://github.com/nvim-treesitter/nvim-treesitter.git
