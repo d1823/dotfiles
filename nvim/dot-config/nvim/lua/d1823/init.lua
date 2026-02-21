@@ -1,9 +1,18 @@
 require("d1823.packer")
+require("d1823.background_sync")
+
+vim.g.mapleader = " "
+
+require("d1823.run_configs")
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- TODO: Snippets
 -- TODO: Autocompletion
 -- TODO: [PHP] `namespace` autocompletion
 -- TODO: File browser (maybe https://github.com/pablopunk/native-sidebar.vim/blob/master/plugin/native-sidebar.vim?)
+-- TODO: Debugging.
 
 -- I don't mind the default status bar aside from the lack of padding.
 -- Let's use this default status bar approximation with some spaces on each side.
@@ -18,6 +27,19 @@ vim.keymap.set('n', '<C-f>', ':FzfLua lsp_document_symbols<CR>')
 vim.keymap.set('n', '<C-g>', ':FzfLua lsp_live_workspace_symbols<CR>')
 vim.keymap.set('n', '<C-s>', ':FzfLua live_grep_native<CR>')
 vim.keymap.set('v', '<C-s>', ':FzfLua grep_visual<CR>')
+
+local nvimTreeFocusOrToggle = function ()
+    local nvimTree = require("nvim-tree.api")
+    local currentBuf = vim.api.nvim_get_current_buf()
+    local currentBufFt = vim.api.nvim_get_option_value("filetype", { buf = currentBuf })
+    if currentBufFt == "NvimTree" then
+        nvimTree.tree.toggle()
+    else
+        nvimTree.tree.focus()
+    end
+end
+
+vim.keymap.set('n', '<C-b>', nvimTreeFocusOrToggle)
 
 vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'k', 'gk')
@@ -48,9 +70,11 @@ vim.opt.incsearch = true
 
 vim.opt.scrolloff = 8
 
+vim.opt.timeoutlen = 150
 vim.opt.updatetime = 50
 
 vim.opt.termguicolors = true
+vim.cmd [[silent colorscheme solarized8]]
 
 vim.o.completeopt = "menu,menuone,popup,fuzzy"
 
@@ -68,13 +92,18 @@ vim.opt.cursorline = true
 vim.opt.number = true
 vim.opt.signcolumn = "yes"
 
-vim.g.netrw_browse_split = 0
-vim.g.netrw_banner = 0
-vim.g.netrw_winsize = 25
-vim.g.netrw_keepdir = 0
+vim.o.exrc = true
+
+vim.filetype.add({
+  pattern = {
+    ['.*.j2'] = 'jinja',
+  },
+})
+
+vim.treesitter.language.register('jinja', 'j2')
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "go", "php", "javascript", "typescript", "json", "yaml", "lua", "vim", "vimdoc", "ini" },
+  ensure_installed = { "go", "php", "javascript", "typescript", "json", "yaml", "lua", "vim", "vimdoc", "ini", "twig", "jinja" },
   auto_install = true,
   indent = {
       enable = true
@@ -101,9 +130,8 @@ require'lspconfig'.intelephense.setup{
     }
 }
 
-require'lspconfig'.gopls.setup({
-    on_attach = on_attach,
-})
+vim.lsp.enable('gopls')
+vim.lsp.enable('ts_ls')
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
@@ -132,6 +160,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
     if client.supports_method('textDocument/hover') then
         vim.keymap.set('n', 'gh', '<cmd>lua vim.lsp.buf.hover()<CR>')
+    end
+    if client.supports_method('textDocument/formatting') then
+        vim.keymap.set('n', 'ff', '<cmd>lua vim.lsp.buf.format()<CR>')
     end
 
     vim.diagnostic.config({underline=true, virtual_text=true, update_in_insert=true})
@@ -236,11 +267,173 @@ require('kulala').setup({
 })
 
 require('fzf-lua').setup({
-    'telescope',
-    winopts = {
-        backdrop = 100, -- Disable dark background
+        'telescope',
+        winopts = {
+            backdrop = 100, -- Disable dark background
+        },
+        fzf_colors = true
+    })
+
+require('fzf-lua').register_ui_select()
+
+require("nvim-tree").setup({
+    view = {
+        width = 60
     },
-    fzf_colors = true
 })
 
-require("d1823.background_sync").run()
+local keywords = {
+  TODO  = '#b58900',
+  FIXME = '#dc322f',
+  NOTE  = '#d33682',
+}
+
+local function set_highlights()
+  for kw, color in pairs(keywords) do
+    vim.api.nvim_set_hl(0, 'Comment' .. kw .. 'KeyType', { fg = color, reverse = true, bold = true })
+    vim.api.nvim_set_hl(0, 'Comment' .. kw .. 'KeyContext', { fg = color, reverse = true, underline = true })
+    vim.api.nvim_set_hl(0, 'Comment' .. kw .. 'Rest', { fg = color })
+  end
+end
+
+set_highlights()
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+  callback = set_highlights,
+})
+
+local ns = vim.api.nvim_create_namespace('comment_keywords')
+
+local function is_comment(buf, row, col)
+  local ok, node = pcall(vim.treesitter.get_node, { bufnr = buf, pos = { row, col } })
+  if ok and node then
+    while node do
+      if node:type():match('comment') then
+        return true
+      end
+      node = node:parent()
+    end
+  end
+  return false
+end
+
+function highlight_buffer(buf)
+  buf = buf or vim.api.nvim_get_current_buf()
+  vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local i = 1
+
+  while i <= #lines do
+    local line = lines[i]
+
+    for kw, _ in pairs(keywords) do
+      local prefix, matched_kw = line:match('^(%s*//%s*)(' .. kw .. ')')
+
+      if prefix and matched_kw and is_comment(buf, i - 1, #prefix) then
+        local full_prefix = line:match('^(%s*//%s*' .. kw .. '%b()%s*)')
+          or line:match('^(%s*//%s*' .. kw .. ':?%s*)')
+        local cont_col = full_prefix and #full_prefix or (#prefix + #kw + 1)
+
+        -- comment chars
+        vim.api.nvim_buf_set_extmark(buf, ns, i - 1, 0, {
+          end_col = #prefix,
+          hl_group = 'Comment' .. kw .. 'Rest',
+          priority = 200,
+        })
+
+        -- check for parens after keyword
+        local after_kw = line:sub(#prefix + #kw + 1)
+        local paren_open, paren_content, paren_close = after_kw:match('^(%()(.-)(%))')
+
+        if paren_content then
+          -- keyword + opening paren: reversed
+          vim.api.nvim_buf_set_extmark(buf, ns, i - 1, #prefix, {
+            end_col = #prefix + #kw + 1,
+            hl_group = 'Comment' .. kw .. 'KeyType',
+            priority = 200,
+          })
+          -- content inside parens: underlined
+          vim.api.nvim_buf_set_extmark(buf, ns, i - 1, #prefix + #kw + 1, {
+            end_col = #prefix + #kw + 1 + #paren_content,
+            hl_group = 'Comment' .. kw .. 'KeyContext',
+            priority = 200,
+          })
+          -- closing paren: reversed
+          vim.api.nvim_buf_set_extmark(buf, ns, i - 1, #prefix + #kw + 1 + #paren_content, {
+            end_col = #prefix + #kw + 1 + #paren_content + 1,
+            hl_group = 'Comment' .. kw .. 'KeyType',
+            priority = 200,
+          })
+          -- rest of line after parens
+          vim.api.nvim_buf_set_extmark(buf, ns, i - 1, #prefix + #kw + 1 + #paren_content + 1, {
+            end_col = #line,
+            hl_group = 'Comment' .. kw .. 'Rest',
+            priority = 200,
+          })
+        else
+          -- keyword only, no parens
+          vim.api.nvim_buf_set_extmark(buf, ns, i - 1, #prefix, {
+            end_col = #prefix + #kw,
+            hl_group = 'Comment' .. kw .. 'KeyType',
+            priority = 200,
+          })
+          -- rest of line
+          vim.api.nvim_buf_set_extmark(buf, ns, i - 1, #prefix + #kw, {
+            end_col = #line,
+            hl_group = 'Comment' .. kw .. 'Rest',
+            priority = 200,
+          })
+        end
+
+        -- continuation lines
+        local j = i + 1
+        while j <= #lines do
+          local next_line = lines[j]
+          local next_prefix = next_line:match('^(%s*//%s+)')
+          if next_prefix and #next_prefix >= cont_col
+            and is_comment(buf, j - 1, #next_prefix - 1)
+            and not next_line:match('//%s*TODO')
+            and not next_line:match('//%s*FIXME')
+            and not next_line:match('//%s*NOTE') then
+            vim.api.nvim_buf_set_extmark(buf, ns, j - 1, 0, {
+              end_col = #next_line,
+              hl_group = 'Comment' .. kw .. 'Rest',
+              priority = 200,
+            })
+            j = j + 1
+          else
+            break
+          end
+        end
+
+        i = j
+        goto continue
+      end
+    end
+
+    i = i + 1
+    ::continue::
+  end
+end
+
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'TextChanged', 'TextChangedI' }, {
+  callback = function(ev)
+    vim.schedule(function()
+      if vim.api.nvim_buf_is_valid(ev.buf) then
+        highlight_buffer(ev.buf)
+      end
+    end)
+  end,
+})
+
+-- also re-highlight when treesitter finishes parsing
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function(ev)
+    vim.defer_fn(function()
+      if vim.api.nvim_buf_is_valid(ev.buf) then
+        highlight_buffer(ev.buf)
+      end
+    end, 100)
+  end,
+})
