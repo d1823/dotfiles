@@ -31,7 +31,7 @@ local function launch(cmd)
 
   running[cmd] = term_buf
 
-  vim.keymap.set({'t', 'n', 'i'}, '<esc>', function()
+  vim.keymap.set({'t', 'n', 'i'}, '<C-w>q', function()
     kill = false
     vim.cmd('close')
   end, { buffer = term_buf, silent = true })
