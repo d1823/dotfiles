@@ -24,6 +24,7 @@ local function launch(cmd)
   local buf = vim.api.nvim_create_buf(false, true)
   local win = open_float(buf)
   vim.cmd('terminal ' .. cmd)
+  vim.cmd('startinsert')
 
   local term_buf = vim.api.nvim_get_current_buf()
   local kill = true
@@ -94,6 +95,7 @@ function M.toggle(cmd)
   local buf = vim.api.nvim_create_buf(false, true)
   local win = open_float(buf)
   vim.cmd('terminal ' .. cmd)
+  vim.cmd('startinsert')
   local term_buf = vim.api.nvim_get_current_buf()
 
   toggles[cmd] = { buf = term_buf, win = win }
