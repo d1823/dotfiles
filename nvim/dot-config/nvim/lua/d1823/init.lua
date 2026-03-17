@@ -102,7 +102,7 @@ vim.filetype.add({
 
 vim.treesitter.language.register('jinja', 'j2')
 
-require('nvim-treesitter').install({ "go", "php", "javascript", "typescript", "json", "yaml", "lua", "vim", "vimdoc", "ini", "twig", "jinja" })
+require('nvim-treesitter').install({ "go", "php", "javascript", "typescript", "json", "yaml", "lua", "vim", "vimdoc", "ini", "twig", "jinja", "kulala_http" })
 
 vim.api.nvim_create_autocmd('FileType', {
   callback = function(ev)
@@ -256,6 +256,13 @@ my.snippet.add(
     "pcon", 
     "parent::__construct(${1});"
 )
+
+
+vim.filetype.add({
+  extension = {
+    ['http'] = 'http',
+  },
+})
 
 require('kulala').setup({
     additional_curl_options = { "--insecure" },
