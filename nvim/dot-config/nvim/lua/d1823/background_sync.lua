@@ -14,7 +14,18 @@ local M = {
 function M.get_system_theme()
     local current_mode = "light" -- Default to light
 
-    if vim.fn.has("unix") then
+    if vim.fn.has("macunix") == 1 then
+        -- macOS: Check AppleInterfaceStyle
+        -- 'defaults read -g AppleInterfaceStyle' outputs "Dark" in dark mode.
+        -- In Light Mode, the key might not exist or the command might error.
+        -- '2>/dev/null' suppresses stderr to handle cases where the key doesn't exist.
+        local command_output = vim.fn.trim(vim.fn.system("defaults read -g AppleInterfaceStyle 2>/dev/null"))
+        if command_output == "Dark" then
+            current_mode = "dark"
+        else
+            current_mode = "light"
+        end
+    elseif vim.fn.has("unix") == 1 then
         -- Linux/Other Unix: Use dbus-send for XDG Desktop Portals color-scheme
         -- Spec: https://github.com/flatpak/xdg-desktop-portal/blob/main/data/org.freedesktop.impl.portal.Settings.xml#L34
         -- Portal values: 0 for 'no-preference', 1 for 'prefer-dark', 2 for 'prefer-light'.
@@ -27,26 +38,12 @@ function M.get_system_theme()
                 current_mode = "dark"
             elseif portal_value == 2 then -- 2 means prefer-light
                 current_mode = "light"
-            else -- 0 (no-preference) or any other case (e.g., error, non-numeric output)
-                current_mode = "light" -- Default to light for "no preference" or if detection is unclear
+            else -- 0 (no-preference) or any other case
+                current_mode = "light"
             end
-
         else
-            -- dbus command failed or produced no relevant output
-            -- This might happen if the desktop environment doesn't support the portal.
             vim.notify("System theme via D-Bus: Failed to get value, defaulting to light.", vim.log.levels.INFO)
             current_mode = "light"
-        end
-    elseif vim.fn.has("macunix") then
-        -- macOS: Check AppleInterfaceStyle
-        -- 'defaults read -g AppleInterfaceStyle' outputs "Dark" in dark mode.
-        -- In Light Mode, the key might not exist or the command might error.
-        -- '2>/dev/null' suppresses stderr to handle cases where the key doesn't exist.
-        local command_output = vim.fn.trim(vim.fn.system("defaults read -g AppleInterfaceStyle 2>/dev/null"))
-        if command_output == "Dark" then
-            current_mode = "dark"
-        else
-            current_mode = "light" -- Default if not 'Dark' or command failed/key absent
         end
     else
         -- Fallback for other operating systems (e.g., Windows) or if detection fails.
