@@ -10,7 +10,6 @@ vim.keymap.set('n', '<leader>cc', function() float_term.toggle('claude') end, { 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- TODO: Snippets
 -- TODO: [PHP] `namespace` autocompletion
 -- TODO: Debugging.
 
@@ -126,6 +125,9 @@ vim.lsp.enable('intelephense')
 vim.lsp.enable('gopls')
 vim.lsp.enable('ts_ls')
 
+-- Disable in-snippet highlighting
+vim.api.nvim_set_hl(0, "SnippetTabstop", {})
+
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     vim.diagnostic.config({ underline=true, virtual_text=true, update_in_insert=true })
@@ -182,80 +184,121 @@ function my.snippet.add(trigger, body, opts)
     end, opts)
 end
 
-my.snippet.add(
-    "privf", 
-    table.concat({
-        "private function ${1}(${2}): ${3}",
-        "{",
-        "    ${4}",
-        "}"
-    }, "\n")
-)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  callback = function(args)
+        local opts = { buffer = args.buf }
 
-my.snippet.add(
-    "privsf", 
-    table.concat({
-        "private static function ${1}(${2}): ${3}",
-        "{",
-        "    ${4}",
-        "}"
-    }, "\n")
-)
+        my.snippet.add(
+            "mfun", 
+            table.concat({
+                "func (${1}) ${2}(${3})${4} {",
+                "   ${5}",
+                "}"
+            }, "\n")
+        )
 
-my.snippet.add(
-    "prof", 
-    table.concat({
-        "protected function ${1}(${2}): ${3}",
-        "{",
-        "    ${4}",
-        "}"
-    }, "\n")
-)
+        my.snippet.add(
+            "fun", 
+            table.concat({
+                "func ${1}(${2})${3} {",
+                "   ${4}",
+                "}"
+            }, "\n")
+        )
 
-my.snippet.add(
-    "prosf", 
-    table.concat({
-        "protected static function ${1}(${2}): ${3}",
-        "{",
-        "    ${4}",
-        "}"
-    }, "\n")
-)
+        my.snippet.add(
+            "iferr", 
+            table.concat({
+                "if err != nil {",
+                "   ${1}",
+                "}"
+            }, "\n")
+        )
+    end,
+})
 
-my.snippet.add(
-    "pubf", 
-    table.concat({
-        "public function ${1}(${2}): ${3}",
-        "{",
-        "    ${4}",
-        "}"
-    }, "\n")
-)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "php",
+  callback = function(args)
+        local opts = { buffer = args.buf }
 
-my.snippet.add(
-    "pubsf", 
-    table.concat({
-        "public static function ${1}(${2}): ${3}",
-        "{",
-        "    ${4}",
-        "}"
-    }, "\n")
-)
+        my.snippet.add(
+            "privf", 
+            table.concat({
+                "private function ${1}(${2}): ${3}",
+                "{",
+                "    ${4}",
+                "}"
+            }, "\n")
+        )
 
-my.snippet.add(
-    "con", 
-    table.concat({
-        "public function __construct(${1})",
-        "{",
-        "    ${2}",
-        "}"
-    }, "\n")
-)
+        my.snippet.add(
+            "privsf", 
+            table.concat({
+                "private static function ${1}(${2}): ${3}",
+                "{",
+                "    ${4}",
+                "}"
+            }, "\n")
+        )
 
-my.snippet.add(
-    "pcon", 
-    "parent::__construct(${1});"
-)
+        my.snippet.add(
+            "prof", 
+            table.concat({
+                "protected function ${1}(${2}): ${3}",
+                "{",
+                "    ${4}",
+                "}"
+            }, "\n")
+        )
+
+        my.snippet.add(
+            "prosf", 
+            table.concat({
+                "protected static function ${1}(${2}): ${3}",
+                "{",
+                "    ${4}",
+                "}"
+            }, "\n")
+        )
+
+        my.snippet.add(
+            "pubf", 
+            table.concat({
+                "public function ${1}(${2}): ${3}",
+                "{",
+                "    ${4}",
+                "}"
+            }, "\n")
+        )
+
+        my.snippet.add(
+            "pubsf", 
+            table.concat({
+                "public static function ${1}(${2}): ${3}",
+                "{",
+                "    ${4}",
+                "}"
+            }, "\n")
+        )
+
+        my.snippet.add(
+            "con", 
+            table.concat({
+                "public function __construct(${1})",
+                "{",
+                "    ${2}",
+                "}"
+            }, "\n")
+        )
+
+        my.snippet.add(
+            "pcon", 
+            "parent::__construct(${1});"
+        )
+    end,
+})
 
 
 vim.filetype.add({
