@@ -266,6 +266,7 @@ vim.filetype.add({
 
 require('kulala').setup({
     additional_curl_options = { "--insecure" },
+    global_keymaps = true
 })
 
 require('fzf-lua').setup({
