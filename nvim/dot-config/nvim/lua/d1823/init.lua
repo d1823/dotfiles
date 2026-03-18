@@ -11,9 +11,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- TODO: Snippets
--- TODO: Autocompletion
 -- TODO: [PHP] `namespace` autocompletion
--- TODO: File browser (maybe https://github.com/pablopunk/native-sidebar.vim/blob/master/plugin/native-sidebar.vim?)
 -- TODO: Debugging.
 
 -- I don't mind the default status bar aside from the lack of padding.
