@@ -76,7 +76,7 @@ vim.opt.timeoutlen = 200
 vim.opt.updatetime = 50
 vim.cmd [[silent colorscheme solarized8]]
 
-vim.o.completeopt = "menu,menuone,popup,fuzzy"
+vim.o.completeopt = "menu,menuone,noinsert,fuzzy"
 
 vim.opt.list = true
 vim.opt.listchars = {
@@ -130,38 +130,40 @@ vim.lsp.enable('ts_ls')
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
+    vim.diagnostic.config({ underline=true, virtual_text=true, update_in_insert=true })
+
     local client = vim.lsp.get_client_by_id(args.data.client_id)
 
     if client.supports_method('textDocument/codeAction') then
-        vim.keymap.set('n', 'fa', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+        vim.keymap.set('n', 'fa', '<cmd>lua vim.lsp.buf.code_action()<CR>', { buffer = args.buf })
     end
     if client.supports_method('textDocument/rename') then
-        vim.keymap.set('n', 'fr', '<cmd>lua vim.lsp.buf.rename()<CR>')
+        vim.keymap.set('n', 'fr', '<cmd>lua vim.lsp.buf.rename()<CR>', { buffer = args.buf })
     end
     if client.supports_method('textDocument/implementation') then
-        vim.keymap.set('n', 'gi', '<cmd>lua require("fzf-lua").lsp_implementations()<CR>')
+        vim.keymap.set('n', 'gi', '<cmd>lua require("fzf-lua").lsp_implementations()<CR>', { buffer = args.buf })
     end
     if client.supports_method('textDocument/definition') then
-        vim.keymap.set('n', 'gd', '<cmd>lua require("fzf-lua").lsp_definitions()<CR>')
+        vim.keymap.set('n', 'gd', '<cmd>lua require("fzf-lua").lsp_definitions()<CR>', { buffer = args.buf })
     end
     if client.supports_method('textDocument/declaration') then
-        vim.keymap.set('n', 'gD', '<cmd>lua require("fzf-lua").lsp_declarations()<CR>')
+        vim.keymap.set('n', 'gD', '<cmd>lua require("fzf-lua").lsp_declarations()<CR>', { buffer = args.buf })
     end
     if client.supports_method('textDocument/signatureHelp') then
-        vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
+        vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { buffer = args.buf })
     end
     if client.supports_method('textDocument/references') then
-        vim.keymap.set('n', 'gr', '<cmd>lua require("fzf-lua").lsp_references()<CR>')
+        vim.keymap.set('n', 'gr', '<cmd>lua require("fzf-lua").lsp_references()<CR>', { buffer = args.buf })
     end
     if client.supports_method('textDocument/hover') then
-        vim.keymap.set('n', 'gh', '<cmd>lua vim.lsp.buf.hover()<CR>')
+        vim.keymap.set('n', 'gh', '<cmd>lua vim.lsp.buf.hover()<CR>', { buffer = args.buf })
     end
     if client.supports_method('textDocument/formatting') then
-        vim.keymap.set('n', 'ff', '<cmd>lua vim.lsp.buf.format()<CR>')
+        vim.keymap.set('n', 'ff', '<cmd>lua vim.lsp.buf.format()<CR>', { buffer = args.buf })
     end
-
-    vim.diagnostic.config({underline=true, virtual_text=true, update_in_insert=true})
-    vim.lsp.completion.enable(true, args.data.client_id, 0)
+    if client:supports_method('textDocument/completion') then
+        vim.lsp.completion.enable(true, args.data.client_id, args.buf, { autotrigger = true })
+    end
   end,
 })
 
