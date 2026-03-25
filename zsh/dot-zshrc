@@ -1,6 +1,3 @@
-if [[ ":$PATH:" != *":/Users/dawid/.local/bin:"* ]]; then
-    export PATH="$PATH:/Users/dawid/.local/bin"
-fi
 autoload -U select-word-style
 select-word-style bash
 
@@ -85,45 +82,94 @@ function open-container() {
 
 zle -N open-container
 
-get_fzf_default_opts() {
-  local base03="234"
-  local base02="235"
-  local base01="240"
-  local base00="241"
-  local base0="244"
-  local base1="245"
-  local base2="254"
-  local base3="230"
-  local yellow="136"
-  local orange="166"
-  local red="160"
-  local magenta="125"
-  local violet="61"
-  local blue="33"
-  local cyan="37"
-  local green="64"
+function proxy() {
+    if [ -z "$1" ]; then
+        echo "Usage: proxy <id|name>"
+        echo "Example: proxy 133"
+        echo "Example: proxy ms-1"
+        return 1
+    fi
 
-  local solarized_dark=
-  local solarized_light="
-    --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:-1,hl+:$blue
-    --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
-  "
+    local TARGET_HOST
 
-  local color_scheme="$(
-    dbus-send --session --dest=org.freedesktop.portal.Desktop --print-reply /org/freedesktop/portal/desktop org.freedesktop.portal.Settings.Read string:'org.freedesktop.appearance' string:'color-scheme' |
-    tail -n 1 |
-    awk '{print $4}'
-  )"
+    if [[ "$1" =~ ^[0-9]+$ ]]; then
+        TARGET_HOST="proxy-$1"
+    else
+        TARGET_HOST="$1"
+    fi
 
-  if [ $color_scheme = 2 ]; then
-    echo $solarized_light
-  else
-    echo $solarized_dark
-  fi
+    if [ -n "$TMUX" ]; then
+        local ORIGINAL_NAME=$(tmux display-message -p '#W')
+
+        trap "tmux rename-window \"$ORIGINAL_NAME\"" EXIT
+
+        tmux rename-window "$TARGET_HOST"
+    fi
+
+    ssh proxycheap.dev -t ssh "$TARGET_HOST"
 }
 
-export FZF_DEFAULT_OPTS="--color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:-1,hl+:$blue --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow"
+function proxy-scp() {
+    if [ -z "$1" ]; then
+        echo "Usage: proxy-scp <id|name>:<remote_path> <local_path>"
+        echo "Example: proxy-scp 133:/root/file.bin ~/Downloads/file.bin"
+        echo "Example: proxy-scp ms-1:/root/file.bin ~/Downloads/file.bin"
+        return 1
+    fi
+
+    local REMOTE_ARG="$1"
+    local LOCAL_DEST_ARG="$2"
+    local HOST_PART="${REMOTE_ARG%%:*}"
+    local PATH_PART="${REMOTE_ARG#*:}"
+
+    if [ "$HOST_PART" = "$PATH_PART" ]; then
+        echo "Error: Remote source format must be <server>:<path>"
+        return 1
+    fi
+
+    local TARGET_HOST
+    if [[ "$HOST_PART" =~ ^[0-9]+$ ]]; then
+        TARGET_HOST="proxy-$HOST_PART"
+    else
+        TARGET_HOST="$HOST_PART"
+    fi
+
+    local FINAL_LOCAL_PATH
+    if [ -d "$LOCAL_DEST_ARG" ]; then
+        local FILENAME=$(basename "$PATH_PART")
+        FINAL_LOCAL_PATH="$LOCAL_DEST_ARG/$FILENAME"
+    else
+        FINAL_LOCAL_PATH="$LOCAL_DEST_ARG"
+    fi
+
+    echo "Downloading from '$TARGET_HOST:$PATH_PART' via jump-server..."
+
+    ssh proxycheap.dev ssh "$TARGET_HOST" "cat '$PATH_PART'" > "$FINAL_LOCAL_PATH"
+
+    if [ $? -eq 0 ]; then
+        echo "Download complete."
+    else
+        echo "Error: Download failed."
+        rm -f "$FINAL_LOCAL_PATH"
+    fi
+}
+
+export FZF_DEFAULT_OPTS="--color=fg:#cb4b16,bg:-1,hl:#cb4b16:REVERSE,fg+:#fcf4e0,bg+:#cb4b16,hl+:#fcf4e0:REVERSE,info:#839496,prompt:#cb4b16,query:#94a1a1:ITALIC,border:#586e75,pointer:#cb4b16,marker:#cb4b16,spinner:#cb4b16,header:#94a1a1:BOLD"
 
 bindkey '^p' open-code-dir
 bindkey '^o' open-ssh
 bindkey '^u' open-container
+
+alias lg="lazygit"
+alias e="nvim"
+alias se="sudo nvim"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/dawid/.lmstudio/bin"
+# End of LM Studio CLI section
+
+export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+
+
+# opencode
+export PATH=/Users/dawid/.opencode/bin:$PATH
