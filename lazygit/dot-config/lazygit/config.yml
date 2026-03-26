@@ -1,0 +1,6 @@
+gui:
+  useHunkModeInStagingView: true
+  nerdFontsVersion: "3"
+  theme:
+    selectedLineBgColor:
+      - reverse
