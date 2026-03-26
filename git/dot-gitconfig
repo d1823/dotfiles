@@ -1,5 +1,6 @@
 [user]
   name = "Dawid Wołosowicz"
+	email = d@1823.pl
 [alias]
   sdiff = diff --staged
   unstage = "reset HEAD"
@@ -9,6 +10,7 @@
 [core]
   excludesfile = ~/.gitignore
   commentchar = "*"
+  editor = "nvim"
 
 # The .gitconfig.projects file contains a set of gitdir based conditional
 # includes to namespace-specific git configurations.
@@ -32,3 +34,7 @@
 # when it was discovered that Go dependency resolution has issues finding them.
 [include]
   path = ~/.gitconfig.urls
+[pull]
+	rebase = true
+[url "git@github.com:"]
+	insteadOf = https://github.com/

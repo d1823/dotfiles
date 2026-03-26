@@ -3,3 +3,5 @@
 *.swp
 .phpunit.result.cache
 .phpunit.cache/
+.vscode/
+.nvim.lua
