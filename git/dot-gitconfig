@@ -34,6 +34,8 @@
 # when it was discovered that Go dependency resolution has issues finding them.
 [include]
   path = ~/.gitconfig.urls
+[rebase]
+    autostash = true
 [pull]
 	rebase = true
 [url "git@github.com:"]
