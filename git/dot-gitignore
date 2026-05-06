@@ -5,3 +5,4 @@
 .phpunit.cache/
 .vscode/
 .nvim.lua
+superpowers/
