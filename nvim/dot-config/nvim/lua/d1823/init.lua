@@ -317,7 +317,13 @@ require('fzf-lua').setup({
         winopts = {
             backdrop = 100, -- Disable dark background
         },
-        fzf_colors = true
+        fzf_colors = true,
+        files = {
+            fd_opts = "--color=never --type f --hidden --follow --no-ignore-vcs"
+                .. " --exclude .git --exclude '*cache*'",
+            rg_opts = "--color=never --files --hidden --follow --no-ignore-vcs"
+                .. " -g '!.git' -g '!*cache*'",
+        },
     })
 
 require('fzf-lua').register_ui_select()
