@@ -310,7 +310,10 @@ vim.filetype.add({
 
 require('kulala').setup({
     additional_curl_options = { "--insecure" },
-    global_keymaps = true
+    global_keymaps = true,
+    ui = {
+        max_response_size = 524288
+    }
 })
 
 require('fzf-lua').setup({
