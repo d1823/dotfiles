@@ -43,6 +43,11 @@ function open-dir() {
 
     cd "$SELECTED"
 
+    if [[ -n "$TMUX" ]]; then
+        tmux set-window-option automatic-rename off
+        tmux rename-window "${SELECTED:t}"
+    fi
+
     zle accept-line
 }
 
