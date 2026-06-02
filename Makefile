@@ -8,3 +8,4 @@ default:
 	stow -t ~ --dotfiles zsh
 	stow -t ~ --dotfiles ideavim
 	stow -t ~ --dotfiles lazygit
+	stow -t ~ --dotfiles claude
