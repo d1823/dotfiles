@@ -48,6 +48,10 @@
 - Readable tests matter: I review them to confirm you built the right thing.
 
 ## Git
+- Commit subject: imperative, at most 72 characters, no trailing period.
+- Everything else goes in the body, after a blank line, wrapped at 72 columns: the why and the notable decisions.
+- This format overrides the style of earlier commits in the log; don't copy long single-line subjects from history.
+  The exception to the above is when the project explicitly specifies its own commit format.
 - No Co-Authored-By or other attribution trailers in commit messages.
 
 ## Specs & frameworks
