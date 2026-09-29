@@ -22,9 +22,12 @@
 
 ## Code
 - Comments explain *why*, never *what*.
+- Write comments for a reader who never saw our conversation. Answers to my
+  questions, and confirmations that a request was met, go in your reply, not the code.
 - A comment's first sentence carries the why and stands alone; the rest is skippable.
 - At most two comment lines inside a function body. Doc-comment conventions on declarations.
-- No change-narration comments ("// fixed X", "// updated to..."). That belongs in commit messages.
+- No change-narration comments ("// fixed X", "// updated to...") and no replies to me
+  ("// covers iPhone and iPad", "// as requested"). Those belong in the reply or commit message.
 - No TODO/FIXME comments: open an issue instead.
 - Rationale for a decision goes in the commit message or a decision record, not the code.
 - Never write counts, hashes, timings or line numbers into comments or docs. Cite symbols or headings.
