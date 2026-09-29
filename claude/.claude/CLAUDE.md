@@ -31,6 +31,8 @@
 - Present changes as diffs.
 - Match existing project conventions over general best practice.
 - No README.md in a new directory unless asked.
+- Group code into paragraphs: one blank line between logical steps, none inside a step.
+  Prefer spacing and names over comments to show structure.
 
 ## Engineering defaults
 - Refuse rather than substitute: a failed config read or missing credential is an error,
