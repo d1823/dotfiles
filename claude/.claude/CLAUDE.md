@@ -29,6 +29,7 @@
 - No change-narration comments ("// fixed X", "// updated to...") and no replies to me
   ("// covers iPhone and iPad", "// as requested"). Those belong in the reply or commit message.
 - No TODO/FIXME comments: open an issue instead.
+- Comments length never longer than the code they explain.
 - Rationale for a decision goes in the commit message or a decision record, not the code.
 - Never write counts, hashes, timings or line numbers into comments or docs. Cite symbols or headings.
 - Present changes as diffs.
